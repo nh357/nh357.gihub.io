@@ -831,7 +831,8 @@ def new_arrow(canvas, vector, x= 0, y= 0):
      "velocity": "#49902a",
      "acceleration":"#4c7fbe",
      "light_grey":"#CCCCCC",
-     "dark_grey":"#666666"}
+     "dark_grey":"#666666",
+     "yellow":"#fea100"}
 
    if vector.vector_type in colour_dict:
       arrow_colour = colour_dict[vector.vector_type]
@@ -855,7 +856,7 @@ def new_arrow(canvas, vector, x= 0, y= 0):
    else:
       arrow_width = 7.5
 
-   print "Vector = %d, arrow_width = %d" %(arrow_length,arrow_width )
+   #print "Vector = %d, arrow_width = %d" %(arrow_length,arrow_width )
 
 
    #Work out the angle of the vector to the horizontal
