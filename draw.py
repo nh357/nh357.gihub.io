@@ -810,72 +810,86 @@ def circle(canvas, radius, x = 0, y = 0):
     canvas.close_path()
 
 def new_arrow(canvas, vector, x= 0, y= 0):
-    """Draws an arrow starting at x and y along the vector3 object vector. Draws
-    it in the appropriate isaac colours.
-    """
-    #canvas is the canvas to draw on
-    #vector is a vector3 object
-    #x and y are the co-ordinates of the start of the arrow
-    #type_of_vector is a text string which should be from the list below
-    
-    
-    #No zero-length arrows:
-    if vector.mag() == 0:
-        return 0
-    
-	
-	#Work out colour of arrow from vector type
-    colour_dict = {"displacement":"#000000",
-      "force":"#bb2828",
-      "force2": "#fea100",
-      "velocity": "#49902a",
-      "acceleration":"#4c7fbe",
-      "light_grey":"#CCCCCC",
-      "dark_grey":"#666666"}
-    
-    if vector.vector_type in colour_dict:
-       arrow_colour = colour_dict[vector.vector_type]
-    else:
-       arrow_colour = "#333333"
-    
-    #The tip length of the arrow is 1/10 of the length of the arrow
-    arrow_tip_length = 0.1 * vector.mag()
-    
-    arrow_width = 0.065 * vector.mag()
-    
-    #Work out the angle of the vector to the horizontal
-    drawing_arrow_direction = vector.phi()
-    
-	
-	#move to corner
-    canvas.translate(x,y)
-    canvas.begin_path()
-    canvas.move_to(0,0)
-	
-	# Draw main part of the arrow    
-    canvas.line_to(vector.x,vector.y)
-    canvas.close_path()
-    
-    canvas.stroke_style = arrow_colour
-    canvas.fill_style = arrow_colour
-    canvas.line_width = arrow_width
-    
-    canvas.stroke()
-	
-	#From end of arrow, draw a triangle for the head of the arrow. The edges are at 0.5236 radians to the direction of the arrow
-    canvas.begin_path()
-    canvas.move_to(vector.x,vector.y)
-    canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction-0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction-0.5236))
-    canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction+0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction+0.5236))
-    canvas.close_path()           
-    
-    #Fill the arrowhead in
-    canvas.stroke()
-    canvas.fill()
-	
-	#Move canvas back
-    canvas.translate(-x,-y)
+   """Draws an arrow starting at x and y along the vector3 object vector. Draws
+   it in the appropriate isaac colours.
+   """
+   #canvas is the canvas to draw on
+   #vector is a vector3 object
+   #x and y are the co-ordinates of the start of the arrow
+   #type_of_vector is a text string which should be from the list below
 
+
+   #No zero-length arrows:
+   if vector.mag() == 0:
+       return 0
+
+
+   #Work out colour of arrow from vector type
+   colour_dict = {"displacement":"#000000",
+     "force":"#bb2828",
+     "force2": "#fea100",
+     "velocity": "#49902a",
+     "acceleration":"#4c7fbe",
+     "light_grey":"#CCCCCC",
+     "dark_grey":"#666666"}
+
+   if vector.vector_type in colour_dict:
+      arrow_colour = colour_dict[vector.vector_type]
+   else:
+      arrow_colour = "#333333"
+
+   #The tip length of the arrow is 1/10 of the length of the arrow
+   arrow_length = vector.mag()
+
+   arrow_tip_length = 0.1 * arrow_length
+
+   if arrow_tip_length < 5:
+     arrow_tip_length = 5
+
+   if arrow_length < 3:
+     arrow_width = arrow_length
+   elif arrow_length < 100:
+     arrow_width = 3 + 0.02 * arrow_length
+   elif arrow_length < 600:
+     arrow_width = 5 + 0.005 * arrow_length
+   else:
+      arrow_width = 7.5
+
+   print "Vector = %d, arrow_width = %d" %(arrow_length,arrow_width )
+
+
+   #Work out the angle of the vector to the horizontal
+   drawing_arrow_direction = vector.phi()
+
+
+   #move to corner
+   canvas.translate(x,y)
+   canvas.begin_path()
+   canvas.move_to(0,0)
+
+   # Draw main part of the arrow
+   canvas.line_to(vector.x,vector.y)
+   canvas.close_path()
+
+   canvas.stroke_style = arrow_colour
+   canvas.fill_style = arrow_colour
+   canvas.line_width = arrow_width
+
+   canvas.stroke()
+
+   #From end of arrow, draw a triangle for the head of the arrow. The edges are at 0.5236 radians to the direction of the arrow
+   canvas.begin_path()
+   canvas.move_to(vector.x,vector.y)
+canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction-0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction-0.5236))
+canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction+0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction+0.5236))
+   canvas.close_path()
+
+   #Fill the arrowhead in
+   canvas.stroke()
+   canvas.fill()
+
+   #Move canvas back
+   canvas.translate(-x,-y)
 def arrow(canvas, length, width, x= 0, y= 0):
     """Draw horizontal arrow of length and width starting at middle of base at x,y."""
     #Redundant, but needs to be roemoved from existing simulations
