@@ -890,7 +890,7 @@ def new_arrow(canvas, vector, x= 0, y= 0):
 
    #Move canvas back
    canvas.translate(-x,-y)
-   
+
 def arrow(canvas, length, width, x= 0, y= 0):
     """Draw horizontal arrow of length and width starting at middle of base at x,y."""
     #Redundant, but needs to be roemoved from existing simulations
