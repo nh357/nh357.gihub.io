@@ -880,8 +880,8 @@ def new_arrow(canvas, vector, x= 0, y= 0):
    #From end of arrow, draw a triangle for the head of the arrow. The edges are at 0.5236 radians to the direction of the arrow
    canvas.begin_path()
    canvas.move_to(vector.x,vector.y)
-canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction-0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction-0.5236))
-canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction+0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction+0.5236))
+   canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction-0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction-0.5236))
+   canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction+0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction+0.5236))
    canvas.close_path()
 
    #Fill the arrowhead in
@@ -890,6 +890,7 @@ canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction+0.5236
 
    #Move canvas back
    canvas.translate(-x,-y)
+   
 def arrow(canvas, length, width, x= 0, y= 0):
     """Draw horizontal arrow of length and width starting at middle of base at x,y."""
     #Redundant, but needs to be roemoved from existing simulations
