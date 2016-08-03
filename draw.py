@@ -857,6 +857,7 @@ def new_arrow(canvas, vector, x= 0, y= 0):
       arrow_width = 7.5
 
    print "Vector = %d, arrow_width = %d" %(arrow_length,arrow_width )
+   print "Vx = %d, Vy = %d, arrow tip = %d" %(vector.x, vector.y, arrow_tip_length)
 
 
    #Work out the angle of the vector to the horizontal
