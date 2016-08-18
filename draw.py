@@ -527,6 +527,10 @@ class vert_slider():
             xcheck = abs(self.centre - x) <= self.grabber_side
             if xcheck and ycheck:
                 self.colour = "#{0:x}".format(int(self.base_colour[1:], 16) + 0x202020)
+                #red   = hex(min(int(self.base_colour[1:3],16)+0x20, 0xff)) # Caps at 0xFF
+                #green = hex(min(int(self.base_colour[3:5],16)+0x20, 0xff))
+                #blue  = hex(min(int(self.base_colour[5:7],16)+0x20, 0xff))
+                #self.colour = "#" + str(red)[-2:] + str(green)[-2:] + str(blue)[-2:]
             else:
                 self.colour = self.base_colour
 
