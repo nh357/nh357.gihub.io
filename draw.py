@@ -270,7 +270,6 @@ class slider():
                 self.colour = "#{0:x}".format(int(self.base_colour[1:], 16) + 0x202020)
             else:
                 self.colour = self.base_colour
-
             if self.mousedown and self.horpad < x <self.cw - self.horpad + 5: #modified 16/03/16 NHB c.f.above
                 #if x < self.cw/2:
                 self.value = int(((x -self.horpad)/self.scale + self.mini)/self.stepsize)*self.stepsize
