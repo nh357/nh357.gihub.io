@@ -15,10 +15,8 @@
 #This is version 2. Modified by Nicki Humphry-Baker and Michael Conterio in 
 #March 2016.
 """Anvil service module for drawing objects and methods, used with the canvas component.
-
 Classes:
 slider -- canvas based slider object for anvil apps.
-
 Functions:
 reset2 -- scale canvas and move origin to bottom left.
 clear_canvas -- clear the canvas.
@@ -38,14 +36,12 @@ import physics
 
 class slider():
     """Anvil Canvas slider object.
-
     Create a slider between mini and maxi with indicator of given colour which 
     can take values in steps of stepsize.
     The starting position is given by start.
     Current value is given in the value attribute.
     Default colour is blue (#318fdb). Optional colour must be given in hex string form.
     Minimum canvas height 40px for standard, 50px with indicators.
-
     Attributes:
     mini (float)-- minimum value of slider.
     maxi (float)-- maximum values of slider.
@@ -56,7 +52,6 @@ class slider():
     maxmin (bool)-- show maximum and minimum values.
     base_colour (string)-- hex colour string of slider.
     enabled (bool)-- is interaction enabled.
-
     Methods:
     draw -- draw slider on canvas.
     map_mouse -- map canvas mouse events to slider object mouse events.
@@ -64,13 +59,11 @@ class slider():
     mouse_move -- move slider with mouse if mouse down.
     mouse_up -- stop interaction when mouse up.
     mouse_leave -- stop mouse interaction when mouse leave.
-
     """
 
     default_colour = "#318fdb"
     def __init__(self, canvas, mini, maxi, stepsize, start = 0, colour = default_colour):
         """Initialize slider object.
-
         Parameters:
         canvas (Canvas)-- anvil canvas component to draw on.
         mini (float)-- minimum value of slider.
@@ -267,9 +260,14 @@ class slider():
             xcheck = abs((x-self.horpad) - (self.value-self.mini)*self.scale) <= self.grabber_side
             ycheck = abs(self.centre - y) <= self.grabber_side
             if xcheck and ycheck:
-                self.colour = "#{0:x}".format(int(self.base_colour[1:], 16) + 0x202020)
+                #self.colour = "#{0:x}".format(int(self.base_colour[1:], 16) + 0x202020)
+                red   = hex(min(int(self.base_colour[1:3],16)+0x20, 0xff)) # Caps at 0xFF
+                green = hex(min(int(self.base_colour[3:5],16)+0x20, 0xff))
+                blue  = hex(min(int(self.base_colour[5:7],16)+0x20, 0xff))
+                self.colour = "#" + str(red)[-2:] + str(green)[-2:] + str(blue)[-2:]
             else:
                 self.colour = self.base_colour
+
             if self.mousedown and self.horpad < x <self.cw - self.horpad + 5: #modified 16/03/16 NHB c.f.above
                 #if x < self.cw/2:
                 self.value = int(((x -self.horpad)/self.scale + self.mini)/self.stepsize)*self.stepsize
@@ -296,14 +294,12 @@ class slider():
 
 class vert_slider():
     """Anvil Canvas slider object.
-
     Create a slider between mini and maxi with indicator of given colour which 
     can take values in steps of stepsize.
     The starting position is given by start.
     Current value is given in the value attribute.
     Default colour is blue (#318fdb). Optional colour must be given in hex string form.
     Minimum canvas height 40px for standard, 50px with indicators.
-
     Attributes:
     mini (float)-- minimum value of slider.
     maxi (float)-- maximum values of slider.
@@ -314,7 +310,6 @@ class vert_slider():
     maxmin (bool)-- show maximum and minimum values.
     base_colour (string)-- hex colour string of slider.
     enabled (bool)-- is interaction enabled.
-
     Methods:
     draw -- draw slider on canvas.
     map_mouse -- map canvas mouse events to slider object mouse events.
@@ -322,13 +317,11 @@ class vert_slider():
     mouse_move -- move slider with mouse if mouse down.
     mouse_up -- stop interaction when mouse up.
     mouse_leave -- stop mouse interaction when mouse leave.
-
     """
 
     default_colour = "#318fdb"
     def __init__(self, canvas, mini, maxi, stepsize, start = 0, colour = default_colour):
         """Initialize slider object.
-
         Parameters:
         canvas (Canvas)-- anvil canvas component to draw on.
         mini (float)-- minimum value of slider.
@@ -503,6 +496,7 @@ class vert_slider():
         # x (int) - horizontal position of mouse
         # y (int) - vertical position of mouse
         # button (button) - clicked button
+        y = self.ch - y
     
         if self.enabled and self.vertpad < y < self.ch - self.vertpad + 5:#Modified 25/02/16 - NHB. 
                  #If 5 is added, the second if statement was not needed. 
@@ -520,11 +514,12 @@ class vert_slider():
         # y (int) - vertical position of mouse
      
         #mouse position given from top left, need to map it to bottom right.
-        x = self.cw - x
+        x = self.cw - x #not sure this is necessary, may be unhelpful
+        y = self.ch - y
         
         if self.enabled:
-            ycheck = abs((y-self.vertpad) - (self.value-self.mini)*self.scale) <= self.grabber_side
-            xcheck = abs(self.centre - x) <= self.grabber_side
+            xcheck = abs((x-self.horpad) - (self.value-self.mini)*self.scale) <= self.grabber_side
+            ycheck = abs(self.centre - y) <= self.grabber_side
             if xcheck and ycheck:
                 #self.colour = "#{0:x}".format(int(self.base_colour[1:], 16) + 0x202020)
                 red   = hex(min(int(self.base_colour[1:3],16)+0x20, 0xff)) # Caps at 0xFF
@@ -534,12 +529,13 @@ class vert_slider():
             else:
                 self.colour = self.base_colour
 
-            if self.mousedown and self.vertpad < y <self.ch - self.vertpad + 5: #modified 16/03/16 NHB c.f.above
+            if self.mousedown and self.horpad < x <self.cw - self.horpad + 5: #modified 16/03/16 NHB c.f.above
                 #if x < self.cw/2:
-                self.value = int(((y -self.vertpad)/self.scale + self.mini)/self.stepsize)*self.stepsize
+                self.value = int(((x -self.horpad)/self.scale + self.mini)/self.stepsize)*self.stepsize
                 #else:
                     #self.value = int(1+((x -self.horpad)/self.scale + self.mini)/self.stepsize)*self.stepsize
             self.draw()
+            
 
     #mouse is unclicked
     def mouse_up(self, x, y, button, **event_args):
@@ -560,14 +556,12 @@ class vert_slider():
         
 class log_scale_bar_vert():
     """Anvil Canvas slider object.
-
     Create a logarithmic scale bar between mini and maxi with indicator of given colour which 
     can take values in steps of stepsize.
     The starting position is given by start.
     Current value is given in the value attribute.
     Default colour is blue (#318fdb). Optional colour must be given in hex string form.
     Minimum canvas height 40px for standard, 50px with indicators.
-
     Attributes:
     mini (float)-- minimum value of slider.
     maxi (float)-- maximum values of slider.
@@ -578,7 +572,6 @@ class log_scale_bar_vert():
     maxmin (bool)-- show maximum and minimum values.
     base_colour (string)-- hex colour string of slider.
     enabled (bool)-- is interaction enabled.
-
     Methods:
     draw -- draw slider on canvas.
     map_mouse -- map canvas mouse events to slider object mouse events.
@@ -586,14 +579,12 @@ class log_scale_bar_vert():
     mouse_move -- move slider with mouse if mouse down.
     mouse_up -- stop interaction when mouse up.
     mouse_leave -- stop mouse interaction when mouse leave.
-
     """
 
     default_colour = "#509e2e"
     def __init__(self, canvas, mini, maxi, start = 0, colour = default_colour):
         self.enabled = True
         """Initialize slider object.
-
         Parameters:
         canvas (Canvas)-- anvil canvas component to draw on.
         mini (float)-- minimum value of slider.
@@ -760,9 +751,8 @@ class log_scale_bar_vert():
               add_str = "{0}".format(self.mini * (10**i))
               canvas.fill_text(add_str, 0,0)
               reset2(canvas, 1)    
-            
-            
-#Start of functions
+
+              
 def reset2(canvas, xu):
     """Custom canvas reset function. Resets canvas, then 
      scales to xu, and places origin at bottom left.
@@ -793,17 +783,6 @@ def border(canvas, thickness, colour, xu=1):
     canvas.stroke_style = colour
     canvas.stroke_rect(0, 0, canvas.get_width()/xu, canvas.get_height()/xu)
 
-#Probably not needed
-#def eq_triangle(canvas, side, x= 0, y= 0):
-#  """Draw upward equilateral triangle with bottom left corner at x, y."""
-#
-   # canvas.translate(x,y)
-   # canvas.begin_path()
-   # canvas.move_to(0,0)
-   # canvas.line_to(float(side), 0)
-   # canvas.line_to(float(side)/2, math.sqrt(3))
-   # canvas.close_path()
-    #canvas.translate(-x,-y)
 
 def circle(canvas, radius, x = 0, y = 0):
     """Draw circle of radius at x, y."""
@@ -811,91 +790,125 @@ def circle(canvas, radius, x = 0, y = 0):
     canvas.begin_path()
     canvas.arc(x, y, float(radius), 0, 2*math.pi)
     canvas.close_path()
+    
 
-def new_arrow(canvas, vector, x= 0, y= 0):
-   """Draws an arrow starting at x and y along the vector3 object vector. Draws
-   it in the appropriate isaac colours.
-   """
-   #canvas is the canvas to draw on
-   #vector is a vector3 object
-   #x and y are the co-ordinates of the start of the arrow
-   #type_of_vector is a text string which should be from the list below
-
-
-   #No zero-length arrows:
-   if vector.mag() == 0:
-       return 0
-
-
-   #Work out colour of arrow from vector type
-   colour_dict = {"displacement":"#000000",
-     "force":"#bb2828",
-     "force2": "#fea100",
-     "velocity": "#49902a",
-     "acceleration":"#4c7fbe",
-     "light_grey":"#CCCCCC",
-     "dark_grey":"#666666",
-     "yellow":"#fea100"}
-
-   if vector.vector_type in colour_dict:
-      arrow_colour = colour_dict[vector.vector_type]
-   else:
-      arrow_colour = "#333333"
-
-   #The tip length of the arrow is 1/10 of the length of the arrow
-   arrow_length = vector.mag()
-
-   arrow_tip_length = 0.1 * arrow_length
-
-   if arrow_tip_length < 5:
-     arrow_tip_length = 5
-
-   if arrow_length < 3:
-     arrow_width = arrow_length
-   elif arrow_length < 100:
-     arrow_width = 3 + 0.02 * arrow_length
-   elif arrow_length < 600:
-     arrow_width = 5 + 0.005 * arrow_length
-   else:
-      arrow_width = 7.5
-
-   #print "Vector = %d, arrow_width = %d" %(arrow_length,arrow_width )
-   #print "Vx = %d, Vy = %d, arrow tip = %d" %(vector.x, vector.y, arrow_tip_length)
-
-
-   #Work out the angle of the vector to the horizontal
-   drawing_arrow_direction = vector.phi()
-
-
-   #move to corner
-   canvas.translate(x,y)
-   canvas.begin_path()
-   canvas.move_to(0,0)
-
-   # Draw main part of the arrow
-   canvas.line_to(vector.x,vector.y)
-   canvas.close_path()
-
-   canvas.stroke_style = arrow_colour
-   canvas.fill_style = arrow_colour
-   canvas.line_width = arrow_width
-
-   canvas.stroke()
-
-   #From end of arrow, draw a triangle for the head of the arrow. The edges are at 0.5236 radians to the direction of the arrow
-   canvas.begin_path()
-   canvas.move_to(vector.x,vector.y)
-   canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction-0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction-0.5236))
-   canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction+0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction+0.5236))
-   canvas.close_path()
-
-   #Fill the arrowhead in
-   canvas.stroke()
-   canvas.fill()
-
-   #Move canvas back
-   canvas.translate(-x,-y)
-
+def new_arrow(canvas, vector, x = 0, y = 0, style = "default"):
+    """Draws an arrow starting at x and y along the vector3 object vector. Draws
+    it in the appropriate isaac colours based on the vector.vector_type attribute.
+    Style argument controls the visual style of the arrow.
+    - Default:  Thickness scales with length, filled triangle arrowhead
+    - Dashed:   75% default thickness with a dashed arrow shaft (dash length = 12px).
+    - Skeletal: Constant thickness (1px), arrowhead comprising two flicks
+    """
+    # Modified 18/08/16 James Twigg
+    # To include optional |style| argument determining thickness and so on.
+    # Also added permissible electrical colours to colour_dict
+    
+    # canvas is the canvas to draw on
+    # vector is a vector3 object
+    # x and y are the co-ordinates of the start of the arrow
+    if vector.mag() == 0:
+        return 0
+   
+	# Work out colour of arrow from vector type
+    colour_dict = {"displacement":"#000000", 
+                   "force":       "#bb2828",
+                   "force2":      "#fea100",
+                   "velocity":    "#49902a",
+                   "acceleration":"#4c7fbe",
+                   "light_grey":  "#CCCCCC",
+                   "dark_grey":   "#666666",
+                   "yellow":      "#fea100",
+                   "electric_2":  "#3d6da9", # Only Lorentz force app seems to use this
+                               
+                   "resistance":    "#bb2828",
+                   "inductance":    "#fea100",
+                   "capacitance":   "#666666",
+                   "impedance":     "#944cbe",
+                   "source voltage":"#000000",
+                   "current":       "#4c7fbe"}
+    
+    arrow_colour = colour_dict[vector.vector_type] if vector.vector_type in colour_dict else "#333333"
+    canvas.stroke_style = canvas.fill_style = arrow_colour
+    
+    if style == "default" or style == "dashed":
+        # The tip length of the arrow is 1/10 of the length of the arrow
+        arrow_length = vector.mag()
+        arrow_tip_length = max(0.1 * arrow_length, 5) # At least 5
+       
+        if arrow_length < 3:
+            arrow_width = arrow_length
+        if arrow_length < 100:
+            arrow_width = 3 + 0.02 * arrow_length
+        elif arrow_length < 600:
+            arrow_width = 5 + 0.005 * arrow_length
+        else:
+            arrow_width = 7.5
+        canvas.line_width = arrow_width
+    
+        # Work out the angle of the vector to the horizontal
+        drawing_arrow_direction = vector.phi()
+        
+  	    # Move to corner
+        canvas.translate(x,y)
+        canvas.begin_path()
+        canvas.move_to(0,0)
+   	
+        # Draw main part of the arrow    
+        if style == "default":
+          canvas.line_to(vector.x, vector.y)
+        elif style == "dashed":
+          canvas.line_width = canvas.line_width*(3/4)
+          dashed_line(canvas, 12, vector.x, vector.y, 0, 0, arrow_colour)
+        canvas.close_path()
+        canvas.stroke()
+  	 
+  	    # Draw arrowhead. The edges are at 0.5236 radians to the direction of the arrow
+        canvas.begin_path()
+        canvas.move_to(vector.x,vector.y)
+        canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction-0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction-0.5236))
+        canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction+0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction+0.5236))
+        canvas.close_path()
+        canvas.stroke()
+        canvas.fill()
+        canvas.translate(-x,-y) # Resetting translated canvas position
+        
+    elif style == "skeletal": # For drawing axes
+        # Inspired by Konrad's draw_arrow (grapher module)
+        arrow_length = vector.mag()
+        arrow_tip_length = 10
+        arrow_width = 1
+        canvas.line_width = arrow_width
+    
+        # Following code is identical to default behaviour
+        # Work out the angle of the vector to the horizontal
+        drawing_arrow_direction = vector.phi()
+        
+        # Move to corner
+        canvas.translate(x,y)
+        canvas.begin_path()
+        canvas.move_to(0,0)
+   	
+        # Draw main part of the arrow    
+        canvas.line_to(vector.x,vector.y)
+        canvas.close_path()
+        canvas.stroke()
+        
+        # Draw arrowhead. The edges are at 0.5236 radians to the direction of the arrow
+        canvas.begin_path()
+        canvas.move_to(vector.x,vector.y)
+        canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction-0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction-0.5236))
+        canvas.close_path()
+        canvas.stroke()
+        
+        canvas.begin_path()
+        canvas.move_to(vector.x,vector.y)
+        canvas.line_to(vector.x-arrow_tip_length*math.cos(drawing_arrow_direction+0.5236),vector.y-arrow_tip_length*math.sin(drawing_arrow_direction+0.5236))
+        canvas.close_path()
+        canvas.stroke()
+        canvas.translate(-x,-y) # Resetting translated canvas position
+        
+        
 def arrow(canvas, length, width, x= 0, y= 0):
     """Draw horizontal arrow of length and width starting at middle of base at x,y."""
     #Redundant, but needs to be roemoved from existing simulations
@@ -997,7 +1010,6 @@ def dashed_line(canvas, dashlength, x2, y2, x = 0, y = 0, colour = "black"):
 
 def paths(canvas, paths, thickness, colour = "#333333"):
     """Draw dashed line of colour and thickness joining list of paths.
-
     Each list in paths must be a list of physics.vector3 types.
     """
     
@@ -1140,7 +1152,6 @@ def wavelength_to_rgb(wavelength, gamma=0.8):
     approximate RGB color value. The wavelength must be given
     in nanometers in the range from 380 nm through 750 nm
     (789 THz through 400 THz).
-
     Based on code by Dan Bruton
     http://www.physics.sfasu.edu/astro/color/spectra.html
     '''
