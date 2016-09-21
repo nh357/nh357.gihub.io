@@ -518,8 +518,8 @@ class vert_slider():
         y = self.ch - y
         
         if self.enabled:
-            xcheck = abs((x-self.horpad) - (self.value-self.mini)*self.scale) <= self.grabber_side
-            ycheck = abs(self.centre - y) <= self.grabber_side
+            ycheck = abs((y-self.vertpad) - (self.value-self.mini)*self.scale) <= self.grabber_side
+            xcheck = abs(self.centre - x) <= self.grabber_side
             if xcheck and ycheck:
                 #self.colour = "#{0:x}".format(int(self.base_colour[1:], 16) + 0x202020)
                 red   = hex(min(int(self.base_colour[1:3],16)+0x20, 0xff)) # Caps at 0xFF
@@ -529,13 +529,14 @@ class vert_slider():
             else:
                 self.colour = self.base_colour
 
-            if self.mousedown and self.horpad < x <self.cw - self.horpad + 5: #modified 16/03/16 NHB c.f.above
+            if self.mousedown and self.vertpad < y <self.ch - self.vertpad + 5: #modified 16/03/16 NHB c.f.above
                 #if x < self.cw/2:
-                self.value = int(((x -self.horpad)/self.scale + self.mini)/self.stepsize)*self.stepsize
+                self.value = int(((y -self.vertpad)/self.scale + self.mini)/self.stepsize)*self.stepsize
                 #else:
                     #self.value = int(1+((x -self.horpad)/self.scale + self.mini)/self.stepsize)*self.stepsize
             self.draw()
             
+
 
     #mouse is unclicked
     def mouse_up(self, x, y, button, **event_args):
