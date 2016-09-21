@@ -690,7 +690,7 @@ class graph:
 
       # Now plot the dataset
       for name in self.data:
-         if self.plot_type[name] == "line":
+         if self.plot_type[name] == "line" and len(self.data[name]) != 0:
             self.canvas.stroke_style = self.line_colour[name]
             self.canvas.line_width = self.line_wt[name]
             prev = self.data[name][0] # Keep note of the previous data point
@@ -700,7 +700,7 @@ class graph:
                self.canvas.line_to(point.x * self.scale_x, point.y * self.scale_y)
                prev = vector3(point.x, point.y) # Note that the current point is now the previous point
             self.canvas.stroke() # Draw the whole line
-         elif self.plot_type[name] == "points":
+         elif self.plot_type[name] == "points" and len(self.data[name]) != 0:
             self.canvas.fill_style = self.line_colour[name]
             r = 1.5 * self.line_wt[name]
             for point in self.data[name]: # Draw a circle of diameter 3x the line width at each data point (for visibility)
